@@ -2,6 +2,7 @@ package com.my.dto;
 
 
 import com.my.entity.SuccessKilled;
+import com.my.enums.SeckillStatEnum;
 
 /**
  * @Author: whmyit@163.com
@@ -54,23 +55,40 @@ public class SeckillExecution {
 		this.successKilled = successKilled;
 	}
 
-//	public SeckillExecution(long seckillId, SeckillStateEnum state,
-//			SuccessKilled successKilled) {
-//		super();
-//		this.seckillId = seckillId;
-//		this.state = state.getState();
-//		this.stateInfo = state.getStateInfo();
-//		this.successKilled = successKilled;
-//	}
-//
-//
-//	public SeckillExecution(long seckillId, SeckillStateEnum state ) {
-//		super();
-//		this.seckillId = seckillId;
-//		this.state = state.getState();
-//		this.stateInfo = state.getStateInfo();
-//	}
 
+
+	//秒杀成功返回所有信息
+	public SeckillExecution(long seckillId, SeckillStatEnum statEnum, SuccessKilled successKilled) {
+		this.seckillId = seckillId;
+		this.state = statEnum.getState();
+		this.stateInfo = statEnum.getInfo();
+		this.successKilled = successKilled;
+	}
+
+
+
+
+
+
+	public SeckillExecution(long seckillId, SeckillStatEnum state ) {
+		super();
+		this.seckillId = seckillId;
+		this.state = state.getState();
+		this.stateInfo = state.getInfo();
+	}
+
+
+	public SeckillExecution(long seckillId, int state, SuccessKilled successKilled) {
+		this.seckillId = seckillId;
+		this.state = state;
+		this.successKilled = successKilled;
+	}
+
+	public SeckillExecution(long seckillId, String stateInfo, SuccessKilled successKilled) {
+		this.seckillId = seckillId;
+		this.stateInfo = stateInfo;
+		this.successKilled = successKilled;
+	}
 
 	@Override
 	public String toString() {
