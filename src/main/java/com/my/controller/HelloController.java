@@ -8,31 +8,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class HelloController {
 
-//    //配置文件
-//    @Value("${user.cupSize}")
-//    private String cupSize;
-//
-//
-//
-////    @RequestMapping(value = "/hello" , method = RequestMethod.GET)
-////    public String say(){
-////        return "hello Spring boot!";
-////    }
-//
-//    @RequestMapping(value = {"/hello" ,"/hi" }, method = RequestMethod.GET)
-//    public String hi(){
-//        return "hello Spring boot!";
-//    }
-//
-//    @RequestMapping(value = "/say/{context}", method = RequestMethod.GET)
-//    public String hi(@PathVariable("context") String context){
-//        return "hello Spring boot! context"+context;
-//    }
-//
-//    @GetMapping(value = "myGirl")
-//    public String myGirl(){
-//        return "my girl is ";
-//    }
+
+
+    @GetMapping(value = "myGirl")
+    public String myGirl(){
+        return "my girl is ";
+    }
 
 
 

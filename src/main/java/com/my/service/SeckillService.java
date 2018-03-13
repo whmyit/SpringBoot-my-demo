@@ -6,6 +6,9 @@ import com.my.entity.Seckill;
 import com.my.exception.RepeatKillException;
 import com.my.exception.SeckillCloseException;
 import com.my.exception.SeckillException;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,6 +20,8 @@ import java.util.List;
  *                 3.返回类型友好
  * @Date: Created in 14:31  2018/1/12
  */
+@Repository
+@Component
 public interface SeckillService {
 
 

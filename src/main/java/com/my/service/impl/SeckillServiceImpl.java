@@ -78,11 +78,13 @@ public class SeckillServiceImpl implements SeckillService {
     public SeckillExecution executeSeckill(long seckillId, long userPhone, String md5) throws SeckillException, RepeatKillException, SeckillCloseException {
         //首先判断MD5是否存在或者是否正确
         if(md5 ==null ||!md5.equals(Md5Utill.getMd5(seckillId))){
-              throw new SeckillException("sekill data rewrite");
+              throw new SeckillException("sekill data rewrite1");
         }
 
         //执行秒杀逻辑： 减库存+增加购买明细
-        Date nowTime=new Date();
+        Date sss=new Date();
+
+        Date sss=new Date();
 
         try{
             //否则更新了库存，秒杀成功,增加明细
@@ -94,7 +96,7 @@ public class SeckillServiceImpl implements SeckillService {
             }else {
 
                 //减库存,热点商品竞争 最后更新数据
-                int updateCount=seckillDao.reduceNumber(seckillId,nowTime);
+                int updateCount=seckillDao.reduceNumber(seckillId,sss);
                 if (updateCount<=0)
                 {
                     //没有更新库存记录，说明秒杀结束 rollback

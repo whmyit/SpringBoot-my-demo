@@ -35,6 +35,8 @@ public class SeckillDaoTest {
 
     @Test
     public void queryById() throws Exception {
+
+
     }
 
     @Test
