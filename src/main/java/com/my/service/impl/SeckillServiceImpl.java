@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class SeckillServiceImpl implements SeckillService {
 
-    private Logger logger= LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private SeckillDao seckillDao;
 
@@ -34,7 +34,7 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public List<Seckill> getSeckillList() {
-        return seckillDao.queryAll(0,4);
+        return seckillDao.queryAll(0, 4);
     }
 
     @Override
@@ -44,13 +44,13 @@ public class SeckillServiceImpl implements SeckillService {
 
     @Override
     public Exposer exportSeckillUrl(long seckillId) {
-        Seckill seckil=getSeckillById(seckillId);
-        if(seckil==null){
-            return new Exposer(false,seckillId);
+        Seckill seckil = getSeckillById(seckillId);
+        if (seckil == null) {
+            return new Exposer(false, seckillId);
         }
-        Date startTime=seckil.getStartTime();
+        Date startTime = seckil.getStartTime();
 
-        Date endtime=seckil.getEndTime();
+        Date endtime = seckil.getEndTime();
 
         Date nowTime = new Date();
 
@@ -58,7 +58,7 @@ public class SeckillServiceImpl implements SeckillService {
                 || nowTime.getTime() > endtime.getTime()) {
             return new Exposer(false, seckillId, nowTime.getTime(),
                     startTime.getTime(), endtime.getTime());
-        }else {
+        } else {
             //转换特定字符串的过程  不可逆
             String md5 = Md5Utill.getMd5(seckillId);
             return new Exposer(true, md5, seckillId);
@@ -77,48 +77,41 @@ public class SeckillServiceImpl implements SeckillService {
      */
     public SeckillExecution executeSeckill(long seckillId, long userPhone, String md5) throws SeckillException, RepeatKillException, SeckillCloseException {
         //首先判断MD5是否存在或者是否正确
-        if(md5 ==null ||!md5.equals(Md5Utill.getMd5(seckillId))){
-              throw new SeckillException("sekill data rewrite");
+        if (md5 == null || !md5.equals(Md5Utill.getMd5(seckillId))) {
+            throw new SeckillException("sekill data rewrite");
         }
 
         //执行秒杀逻辑： 减库存+增加购买明细
-        Date nowTime=new Date();
+        Date nowTime = new Date();
 
-        try{
+        try {
             //否则更新了库存，秒杀成功,增加明细
-            int insertCount=successkilleDao.insertSuccessKilled(seckillId,userPhone);
+            int insertCount = successkilleDao.insertSuccessKilled(seckillId, userPhone);
             //看是否该明细被重复插入，即用户是否重复秒杀
-            if (insertCount<=0)
-            {
+            if (insertCount <= 0) {
                 throw new RepeatKillException("seckill repeated");
-            }else {
+            } else {
 
                 //减库存,热点商品竞争 最后更新数据
-                int updateCount=seckillDao.reduceNumber(seckillId,nowTime);
-                if (updateCount<=0)
-                {
+                int updateCount = seckillDao.reduceNumber(seckillId, nowTime);
+                if (updateCount <= 0) {
                     //没有更新库存记录，说明秒杀结束 rollback
                     throw new SeckillCloseException("seckill is closed");
-                }else {
+                } else {
                     //秒杀成功,得到成功插入的明细记录,并返回成功秒杀的信息 commit
-                    SuccessKilled successKilled=successkilleDao.queryByIdWithSeckill(seckillId,userPhone);
-                    return new SeckillExecution(seckillId, SeckillStatEnum.SUCCESS,successKilled);
+                    SuccessKilled successKilled = successkilleDao.queryByIdWithSeckill(seckillId, userPhone);
+                    return new SeckillExecution(seckillId, SeckillStatEnum.SUCCESS, successKilled);
                 }
 
             }
 
 
-        }catch (SeckillCloseException e1)
-        {
+        } catch (SeckillCloseException | RepeatKillException e1) {
             throw e1;
-        }catch (RepeatKillException e2)
-        {
-            throw e2;
-        }catch (Exception e)
-        {
-            logger.error(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             //所以编译期异常转化为运行期异常
-            throw new SeckillException("seckill inner error :"+e.getMessage());
+            throw new SeckillException("seckill inner error :" + e.getMessage());
         }
 
     }
